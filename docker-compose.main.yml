@@ -1,0 +1,6 @@
+include: 
+ - ./apps/restify/docker-compose.yaml
+
+networks:
+  javifood-network:
+    external: true
