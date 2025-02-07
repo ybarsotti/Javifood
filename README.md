@@ -5,7 +5,6 @@ This project is only for study purposes (since I haven't gotten a good project i
 
 The FrontEnd part will not be implemented.
 
-
 What I want to review/learn from here:
 
 - Microsservices architecture
@@ -20,11 +19,12 @@ What I want to review/learn from here:
 - Stress/Load testing
 - K8s
 - SonarQube
+- Observability
 
 # Documentation
 - [Context Diagram](./docs/C4-Context.md) - Provides the C4 context diagram
 - [Containers Diagram](./docs/C4-Containers.md) - Provides the C4 container diagram
-- ...
+- [System Design](./docs/SystemDesign.svg) - Simple System Design
 
 # References
 
