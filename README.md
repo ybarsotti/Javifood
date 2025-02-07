@@ -19,6 +19,7 @@ What I want to review/learn from here:
 - Mermaid (Last DaaC I used was PlantUML - Gotta say that for the C4 model, PlantUML is better, mermaid is too messy, at least so far)
 - Stress/Load testing
 - K8s
+- SonarQube
 
 # Documentation
 - [Context Diagram](./docs/C4-Context.md) - Provides the C4 context diagram
