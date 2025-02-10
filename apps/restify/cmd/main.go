@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
-	"log"
 	"os"
 	"os/signal"
 
@@ -13,10 +11,16 @@ import (
 	"github.com/gofiber/contrib/otelfiber"
 	"github.com/gofiber/fiber/v2"
 
+	log "github.com/sirupsen/logrus"
+
 	"javifood-restify/internal/infrastructure"
 )
 
 var tracer = otel.Tracer("restify")
+
+func init() {
+	log.SetFormatter(&log.JSONFormatter{})
+}
 
 func main() {
 	if err := run(); err != nil {
@@ -26,10 +30,17 @@ func main() {
 
 func run() (err error) {
 	app := fiber.New()
+
 	app.Use(otelfiber.Middleware())
 
+
 	app.Get("/", func(c *fiber.Ctx) error {
-		fmt.Println("ccc")
+		_, span := tracer.Start(c.Context(), "hello")
+		defer span.End()
+		log.WithFields(log.Fields{
+			"name": "Hello Route",
+			"route": "/",
+		}).Info("Request received")
 		return c.SendString("Hello, Fiber!")
 	})
 

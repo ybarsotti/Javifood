@@ -3,18 +3,25 @@ package infrastructure
 import (
 	"context"
 	"errors"
+	"log"
+	"os"
 	"time"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/stdout/stdoutlog"
 	"go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
-	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
+	"go.opentelemetry.io/otel/exporters/zipkin"
 	"go.opentelemetry.io/otel/log/global"
 	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/sdk/log"
+	otelLog "go.opentelemetry.io/otel/sdk/log"
 	"go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/sdk/resource"
 	"go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.12.0"
 )
+
+var serviceName = "restify"
+var zipkinUrl = "http://zipkin:9411/api/v2/spans"
 
 func SetupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, err error) {
 	var shutdownFuncs []func(context.Context) error
@@ -70,15 +77,22 @@ func newPropagator() propagation.TextMapPropagator {
 }
 
 func newTraceProvider() (*trace.TracerProvider, error) {
-	traceExporter, err := stdouttrace.New(
-		stdouttrace.WithPrettyPrint())
+	logger := log.New(os.Stderr, serviceName, log.Ldate|log.Ltime|log.Llongfile)
+	traceExporter, err := zipkin.New(
+		zipkinUrl,
+		zipkin.WithLogger(logger))
 	if err != nil {
 		return nil, err
 	}
 
+	batcher := trace.NewBatchSpanProcessor(traceExporter)
+
 	traceProvider := trace.NewTracerProvider(
-		trace.WithBatcher(traceExporter,
-			trace.WithBatchTimeout(time.Second * 5)),
+		trace.WithSpanProcessor(batcher),
+		trace.WithResource(
+			resource.NewWithAttributes(
+				semconv.SchemaURL,
+				semconv.ServiceNameKey.String(serviceName))),
 	)
 	return traceProvider, nil
 }
@@ -96,15 +110,14 @@ func newMeterProvider() (*metric.MeterProvider, error) {
 	return meterProvider, nil
 }
 
-func newLoggerProvider() (*log.LoggerProvider, error) {
+func newLoggerProvider() (*otelLog.LoggerProvider, error) {
 	logExporter, err := stdoutlog.New()
 	if err != nil {
 		return nil, err
 	}
 
-	loggerProvider := log.NewLoggerProvider(
-		log.WithProcessor(log.NewBatchProcessor(logExporter)),
+	loggerProvider := otelLog.NewLoggerProvider(
+		otelLog.WithProcessor(otelLog.NewBatchProcessor(logExporter)),
 	)
 	return loggerProvider, nil
 }
-
