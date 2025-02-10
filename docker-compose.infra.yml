@@ -1,4 +1,4 @@
-# TODO:  Kong
+# TODO: add Kong and minio
 services:
   keycloak:
       image: quay.io/keycloak/keycloak:26.0
