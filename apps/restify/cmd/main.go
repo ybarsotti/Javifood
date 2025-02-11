@@ -21,11 +21,10 @@ var tracer = otel.Tracer("restify")
 
 func init() {
 	log.SetFormatter(&log.JSONFormatter{})
+	config.NewEnv()
 }
 
 func main() {
-	env := config.NewEnv()
-	log.Debug(env.DB.Host)
 	if err := run(); err != nil {
 		log.Fatal(err)
 	}
