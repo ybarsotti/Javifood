@@ -1,0 +1,8 @@
+---
+APP_ENV: "dev"
+
+DB:
+  HOST="db"
+  USER="postgres"
+  PASSWORD="postgres"
+  DB="restify_db"

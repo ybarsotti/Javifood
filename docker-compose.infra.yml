@@ -99,6 +99,8 @@ services:
       timeout: 3s
       retries: 5
     command: ["redis-server"]
+    networks:
+      - javifood-network
 
 volumes:
   sonar-db-data:

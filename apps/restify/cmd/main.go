@@ -13,6 +13,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"javifood-restify/config"
 	"javifood-restify/internal/infrastructure"
 )
 
@@ -23,6 +24,8 @@ func init() {
 }
 
 func main() {
+	env := config.NewEnv()
+	log.Debug(env.DB.Host)
 	if err := run(); err != nil {
 		log.Fatal(err)
 	}

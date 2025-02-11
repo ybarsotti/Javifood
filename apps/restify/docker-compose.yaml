@@ -1,3 +1,4 @@
+---
 services:
   app:
     container_name: restify
@@ -5,16 +6,11 @@ services:
       context: .
       dockerfile: Dockerfile
     working_dir: /app
-    tty: true 
+    tty: true
     volumes:
       - ./:/app
     ports:
-      - "3000:3000" 
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=restify_db
+      - "3000:3000"
     depends_on:
       - db
     networks:
@@ -27,7 +23,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: restify_db
     ports:
-      - "5435:5432" 
+      - "5435:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
 
