@@ -33,17 +33,6 @@ func run() (err error) {
 
 	app.Use(otelfiber.Middleware())
 
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		_, span := tracer.Start(c.Context(), "hello")
-		defer span.End()
-		log.WithFields(log.Fields{
-			"name": "Hello Route",
-			"route": "/",
-		}).Info("Request received")
-		return c.SendString("Hello, Fiber!")
-	})
-
 	// Handle SIGINT (CTRL+C) gracefully.
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
@@ -63,6 +52,16 @@ func run() (err error) {
 	go func() {
 		srvErr <- app.Listen(":3000")
 	}()
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		_, span := tracer.Start(c.Context(), "hello")
+		defer span.End()
+		log.WithFields(log.Fields{
+			"name": "Hello Route",
+			"route": "/",
+		}).Info("Request received")
+		return c.SendString("Hello, Fiber!")
+	})
 
 	select {
 	case err = <- srvErr:

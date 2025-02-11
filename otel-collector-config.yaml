@@ -1,0 +1,25 @@
+---
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: otel-collector:4317
+
+exporters:
+  zipkin:
+    endpoint: http://zipkin:9411/api/v2/spans
+    format: proto
+  prometheus:
+    endpoint: 0.0.0.0:9090
+  debug:
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [zipkin]
+
+    metrics:
+      receivers: [otlp]
+      processors: []
+      exporters: [prometheus, debug]

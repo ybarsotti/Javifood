@@ -1,26 +1,57 @@
-# TODO: add Kong and minio
+# TODO: add Kong and minio, prometheus
+---
 services:
   keycloak:
-      image: quay.io/keycloak/keycloak:26.0
-      command: ["start-dev", "--http-port", "7080", "--https-port", "7443", "--import-realm"]
-      environment:
-        KC_HOSTNAME: localhost
-        KC_HOSTNAME_PORT: 7080
-        KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
-        KEYCLOAK_ADMIN: admin
-        KEYCLOAK_ADMIN_PASSWORD: admin
-        KC_HEALTH_ENABLED: "true"
-        KC_LOG_LEVEL: info
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:7080/health/ready"]
-        interval: 15s
-        timeout: 2s
-        retries: 15
-      networks:
-        - javifood-network
-      ports:
-        - "7080:7080"
-        - "7443:7443"
+    image: quay.io/keycloak/keycloak:26.0
+    command:
+      [
+        "start-dev",
+        "--http-port",
+        "7080",
+        "--https-port",
+        "7443",
+        "--import-realm",
+      ]
+    environment:
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 7080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: "true"
+      KC_LOG_LEVEL: info
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7080/health/ready"]
+      interval: 15s
+      timeout: 2s
+      retries: 15
+    networks:
+      - javifood-network
+    ports:
+      - "7080:7080"
+      - "7443:7443"
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.119.0
+    command: ["--config=/etc/otel-collector.yaml"]
+    ports:
+      - "4317:4317"   # gRPC
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector.yaml
+    depends_on:
+      - zipkin
+      - prometheus
+    networks:
+      - javifood-network
+
+  prometheus:
+    image: prom/prometheus:v3.1.0
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    networks:
+      - javifood-network
 
   zipkin:
     image: openzipkin/zipkin
