@@ -22,10 +22,10 @@ func NewEnv() *Env {
 	v.SetConfigName("conf")
 	v.SetConfigType("yaml")
 	v.AddConfigPath("./config")
-    v.AutomaticEnv()
+	v.AutomaticEnv()
 
 	err := v.ReadInConfig()
-    if err != nil {
+	if err != nil {
 		log.Fatal("failed to read env: ", err)
 	}
 	var env Env
