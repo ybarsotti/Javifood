@@ -1,9 +1,11 @@
 package repository
 
 import (
-    entity "javifood-restify/internal/domain/entity"
+	"context"
+	entity "javifood-restify/internal/domain/entity"
 )
 
 type RestaurantRepository interface {
-    New(restaurant *entity.Restaurant)
+    Store(ctx context.Context, restaurant *entity.Restaurant) error
+    FindByUserID(ctx context.Context, userID string) (*entity.Restaurant, error)
 }

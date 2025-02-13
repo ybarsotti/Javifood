@@ -1,20 +1,22 @@
 package domain
 
 import (
-    "time"
-    entity "javifood-restify/internal/domain/entity"
+	repository "javifood-restify/internal/domain/repository"
+	valueobject "javifood-restify/internal/domain/value_object"
+	"time"
 )
 
-type CreateRestaurantInputDto struct {
+type CreateRestaurantUseCaseInputDto struct {
 	UserID     string
 	Name       string
 	Address    string
-	Coordinate *entity.Coordinate
+	Coordinate *valueobject.Coordinate
 	OpenTime   time.Time
 	Closetime  time.Time
-	WorkDays   *entity.WorkDays
+	WorkDays   *valueobject.WorkDays
 }
 
-type CreateRestaurant interface {
-    handle(input CreateRestaurantInputDto)
+type CreateRestaurantUseCase interface {
+	repository.RestaurantRepository
+	Handle(input CreateRestaurantUseCaseInputDto)
 }

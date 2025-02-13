@@ -1,4 +1,4 @@
-package entity
+package valueobject
 
 type Coordinate struct {
 	X string
