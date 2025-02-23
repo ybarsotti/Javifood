@@ -26,6 +26,8 @@ services:
       - "5435:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+    networks:
+      - javifood-network
 
 volumes:
   pg_data:

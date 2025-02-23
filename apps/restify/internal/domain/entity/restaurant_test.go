@@ -4,6 +4,7 @@ import (
 	"javifood-restify/internal/domain/entity"
 	"slices"
 	"testing"
+	"time"
 )
 
 func TestRestaurant_NewRestaurantIsValid(t *testing.T) {
@@ -11,14 +12,15 @@ func TestRestaurant_NewRestaurantIsValid(t *testing.T) {
 	userID := "0194fc3f-7a6d-79fe-ab07-7426c04720ca"
 	name := "Restaurant 1"
 	address := "Address 1"
-	coordinateX := "-65.87425"
-	coordinateY := "25.23404"
-	openHour := 8
-	openMinute := 00
-	closeHour := 21
-	closeMinute := 00
+	coordinateX := -65.87425
+	coordinateY := 25.23404
+	openHour := uint8(8)
+	openMinute := uint8(00)
+	closeHour := uint8(21)
+	closeMinute := uint8(00)
 	workDays := []string{"Monday", "Tuesday"}
-	restaurant, err := entity.NewRestaurant(restaurantID, userID, name, address, coordinateX, coordinateY, openHour, openMinute, closeHour, closeMinute, workDays)
+	restaurant, err := entity.NewRestaurant(restaurantID, userID, name, address, coordinateX, coordinateY,
+		openHour, openMinute, closeHour, closeMinute, workDays, time.Now(), time.Now())
 	if err != nil {
 		t.Errorf("not expected error: %v", err.Error())
 	}
@@ -46,7 +48,10 @@ func TestRestaurant_NewRestaurantIsValid(t *testing.T) {
 	if restaurant.CloseTime.String() != "21:00" {
 		t.Errorf("closetime does not match")
 	}
-	if slices.Equal(restaurant.WorkDays.Value, workDays) {
+	if !slices.Equal(restaurant.WorkDays.Value, workDays) {
 		t.Errorf("workdays does not match")
 	}
+}
+
+func TestRestaurant_ValidateMissingUserID(t *testing.T) {
 }

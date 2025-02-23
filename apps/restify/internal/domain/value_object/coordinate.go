@@ -1,11 +1,11 @@
 package valueobject
 
 type Coordinate struct {
-	X string
-	Y string
+	X float64 `faker:"lat"`
+	Y float64 `faker:"long"`
 }
 
-func NewCoordinate(x, y string) (*Coordinate, error) {
+func NewCoordinate(x, y float64) (*Coordinate, error) {
 	return &Coordinate{
 		x, y,
 	}, nil

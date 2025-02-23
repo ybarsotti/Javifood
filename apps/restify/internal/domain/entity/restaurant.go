@@ -1,29 +1,28 @@
 package entity
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"javifood-restify/internal/domain"
 	valueobject "javifood-restify/internal/domain/value_object"
 	"time"
-	"github.com/google/uuid"
 )
 
 type Restaurant struct {
-	ID         *valueobject.ID
-	UserID     *valueobject.ID
-	Name       string
-	Address    string
-	Coordinate *valueobject.Coordinate
-	OpenTime   *valueobject.HourMinute
-	CloseTime  *valueobject.HourMinute
-	WorkDays   *valueobject.WorkDays
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	ID         *valueobject.ID         `faker:"uuid_digit"`
+	UserID     *valueobject.ID         `faker:"uuid_digit"`
+	Name       string                  `faker:"name"`
+	Address    string                  `faker:"real_address"`
+	Coordinate *valueobject.Coordinate `faker:"coordinate"`
+	OpenTime   *valueobject.HourMinute `faker:"hourminute"`
+	CloseTime  *valueobject.HourMinute `faker:"hourminute"`
+	WorkDays   *valueobject.WorkDays   `faker:""`
+	CreatedAt  time.Time              `faker:"date"`
+	UpdatedAt  time.Time              `faker:"date"`
 }
 
-func NewRestaurant(id, userId, name, address, coordX, coordY string, openTimeHour, openTimeMinute, closeTimeHour, closeTimeMinute int, workdays []string) (*Restaurant, error) {
-	coordinate, err := valueobject.NewCoordinate(coordX, coordX)
+func NewRestaurant(id, userId, name, address string, coordX, coordY float64, openTimeHour, openTimeMinute, closeTimeHour, closeTimeMinute uint8, workdays []string, createdAt, updatedAt *time.Time) (*Restaurant, error) {
+	coordinate, err := valueobject.NewCoordinate(coordX, coordY)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +46,6 @@ func NewRestaurant(id, userId, name, address, coordX, coordY string, openTimeHou
 	if err != nil {
 		return nil, err
 	}
-
 	restaurant := &Restaurant{
 		ID:         rid,
 		UserID:     uid,
@@ -57,11 +55,12 @@ func NewRestaurant(id, userId, name, address, coordX, coordY string, openTimeHou
 		OpenTime:   openTime,
 		CloseTime:  closeTime,
 		WorkDays:   workDays,
-		CreatedAt:  time.Now(),
+		CreatedAt:  *createdAt,
+		UpdatedAt:  *updatedAt,
 	}
-	jsonData, _ := json.MarshalIndent(restaurant, "", " ")
-	fmt.Print(string(jsonData))
-	fmt.Print(restaurant)
+	if restaurant.CreatedAt.IsZero() {
+		restaurant.CreatedAt = time.Now()
+	}
 	if err = restaurant.Validate(); err != nil {
 		return nil, fmt.Errorf("error while validating restaurant: %v", err)
 	}

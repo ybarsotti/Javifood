@@ -5,16 +5,21 @@ import (
 	"github.com/spf13/viper"
 )
 
+var EnvConfig Env
+
 type Env struct {
 	AppEnv string   `mapstructure:"APP_ENV"`
-	DB     DbConfig `mapstructure:"BD"`
+	DB     DbConfig `mapstructure:"DB"`
 }
 
 type DbConfig struct {
 	Host     string `mapstructure:"HOST"`
 	User     string `mapstructure:"USER"`
 	Password string `mapstructure:"PASSWORD"`
+	Port     string `mapstructure:"PORT"`
 	DB       string `mapstructure:"DB"`
+	SslMode  string `mapstructure:"SSL_MODE"`
+	TimeZone string `mapstructure:"TIME_ZONE"`
 }
 
 func NewEnv() *Env {
@@ -37,5 +42,6 @@ func NewEnv() *Env {
 		log.Println("App is in dev mode")
 	}
 
+	EnvConfig = env
 	return &env
 }
