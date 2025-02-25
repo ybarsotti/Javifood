@@ -19,8 +19,22 @@ func TestRestaurant_NewRestaurantIsValid(t *testing.T) {
 	closeHour := uint8(21)
 	closeMinute := uint8(00)
 	workDays := []string{"Monday", "Tuesday"}
-	restaurant, err := entity.NewRestaurant(restaurantID, userID, name, address, coordinateX, coordinateY,
-		openHour, openMinute, closeHour, closeMinute, workDays, time.Now(), time.Now())
+	now := time.Now()
+	restaurant, err := entity.NewRestaurant(
+		restaurantID,
+		userID,
+		name,
+		address,
+		coordinateX,
+		coordinateY,
+		openHour,
+		openMinute,
+		closeHour,
+		closeMinute,
+		workDays,
+		&now,
+		&now,
+	)
 	if err != nil {
 		t.Errorf("not expected error: %v", err.Error())
 	}

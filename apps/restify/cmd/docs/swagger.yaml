@@ -1,0 +1,88 @@
+basePath: /
+definitions:
+  handler.payloadDto:
+    properties:
+      address:
+        example: 3598 Pringle Drive
+        type: string
+      close_time:
+        example: "22:30"
+        type: string
+      coordinate_x:
+        example: -21.74568
+        type: number
+      coordinate_y:
+        example: -89.34886
+        type: number
+      name:
+        example: Restaurant XYZ
+        type: string
+      open_time:
+        example: "10:00"
+        type: string
+      user_id:
+        example: 01953aa5-7d18-7781-bf1c-f425606b565f
+        type: string
+      work_days:
+        example:
+        - '[''Monday'''
+        - ' ''Tuesday'']'
+        items:
+          enum:
+          - Monday
+          - Tuesday
+          - Wednesday
+          - Thursday
+          - Friday
+          - Saturday
+          - Sunday
+          type: string
+        type: array
+    required:
+    - address
+    - close_time
+    - coordinate_x
+    - coordinate_y
+    - name
+    - open_time
+    - user_id
+    - work_days
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: contact@yuribarsotti.tech
+    name: Yuri Barsotti
+  description: Restify API docs
+  title: JaviFood Restify
+  version: "1.0"
+paths:
+  /api/v1/restaurants:
+    post:
+      consumes:
+      - application/json
+      responses:
+        "201":
+          description: Created
+      summary: Create a restaurant
+      tags:
+      - restaurant
+  /api/v1/restaurants/:
+    post:
+      consumes:
+      - application/json
+      description: Allows to create a restaurant to the user
+      parameters:
+      - description: Restaurant data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/handler.payloadDto'
+      responses:
+        "201":
+          description: Created
+      summary: Create a restaurant
+      tags:
+      - restaurants
+swagger: "2.0"

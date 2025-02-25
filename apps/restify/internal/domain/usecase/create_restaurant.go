@@ -17,7 +17,12 @@ type CreateRestaurantUseCaseInputDto struct {
 	WorkDays        []string
 }
 
-func NewCreateRestaurantInputDto(userId, name, address string, coordinateX, coordinateY float64, openTimeHour, openTimeMinute, closeTimeHour, closeTimeMinute uint8, workDays []string) *CreateRestaurantUseCaseInputDto {
+func NewCreateRestaurantInputDto(
+	userId, name, address string,
+	coordinateX, coordinateY float64,
+	openTimeHour, openTimeMinute, closeTimeHour, closeTimeMinute uint8,
+	workDays []string,
+) *CreateRestaurantUseCaseInputDto {
 	return &CreateRestaurantUseCaseInputDto{
 		UserID:          userId,
 		Name:            name,

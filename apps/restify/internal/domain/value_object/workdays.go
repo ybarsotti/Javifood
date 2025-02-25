@@ -5,7 +5,15 @@ import (
 	"slices"
 )
 
-var AVAILABLE_DAYS = []string{"Monday", "Tuesday", "Wednesday", "Thirsday", "Friday", "Saturday", "Sunday"}
+var AVAILABLE_DAYS = []string{
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thirsday",
+	"Friday",
+	"Saturday",
+	"Sunday",
+}
 
 type WorkDays struct {
 	Value []string `faker:"slice_len=5"`
@@ -16,7 +24,7 @@ func NewWorkDays(days []string) (*WorkDays, error) {
 		if !slices.Contains(AVAILABLE_DAYS, day) {
 			return nil, domain.InvalidValueError
 		}
-	} 
+	}
 	return &WorkDays{
 		Value: days,
 	}, nil

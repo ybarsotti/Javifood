@@ -12,7 +12,21 @@ func (rm RestaurantMapper) ToDomain(r model.Restaurant) (*entity.Restaurant, err
 	for i, day := range r.WorkDays {
 		workDays[i] = string(day)
 	}
-	domainRestaurant, err := entity.NewRestaurant(r.ID.String(), r.UserID.String(), r.Name, r.Address, r.CoordinateX, r.CoordinateY, r.OpenTimeHour(), r.OpenTimeMinute(), r.CloseTimeHour(), r.CloseTimeMinute(), workDays, r.CreatedAt, r.UpdatedAt)
+	domainRestaurant, err := entity.NewRestaurant(
+		r.ID.String(),
+		r.UserID.String(),
+		r.Name,
+		r.Address,
+		r.CoordinateX,
+		r.CoordinateY,
+		r.OpenTimeHour(),
+		r.OpenTimeMinute(),
+		r.CloseTimeHour(),
+		r.CloseTimeMinute(),
+		workDays,
+		r.CreatedAt,
+		r.UpdatedAt,
+	)
 	return domainRestaurant, err
 }
 

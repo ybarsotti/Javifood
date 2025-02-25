@@ -1,0 +1,124 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Restify API docs",
+        "title": "JaviFood Restify",
+        "contact": {
+            "name": "Yuri Barsotti",
+            "email": "contact@yuribarsotti.tech"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "paths": {
+        "/api/v1/restaurants": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurant"
+                ],
+                "summary": "Create a restaurant",
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }
+        },
+        "/api/v1/restaurants/": {
+            "post": {
+                "description": "Allows to create a restaurant to the user",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurants"
+                ],
+                "summary": "Create a restaurant",
+                "parameters": [
+                    {
+                        "description": "Restaurant data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.payloadDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handler.payloadDto": {
+            "type": "object",
+            "required": [
+                "address",
+                "close_time",
+                "coordinate_x",
+                "coordinate_y",
+                "name",
+                "open_time",
+                "user_id",
+                "work_days"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "example": "3598 Pringle Drive"
+                },
+                "close_time": {
+                    "type": "string",
+                    "example": "22:30"
+                },
+                "coordinate_x": {
+                    "type": "number",
+                    "example": -21.74568
+                },
+                "coordinate_y": {
+                    "type": "number",
+                    "example": -89.34886
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Restaurant XYZ"
+                },
+                "open_time": {
+                    "type": "string",
+                    "example": "10:00"
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "01953aa5-7d18-7781-bf1c-f425606b565f"
+                },
+                "work_days": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday",
+                            "Saturday",
+                            "Sunday"
+                        ]
+                    },
+                    "example": [
+                        "['Monday'",
+                        " 'Tuesday']"
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -6,6 +6,6 @@ import (
 )
 
 type RestaurantRepository interface {
-    Store(ctx context.Context, restaurant *entity.Restaurant) error
-    FindByUserID(ctx context.Context, userID string) (*entity.Restaurant, error)
+	Store(ctx context.Context, restaurant *entity.Restaurant) error
+	FindByUserID(ctx context.Context, userID string) (*entity.Restaurant, error)
 }

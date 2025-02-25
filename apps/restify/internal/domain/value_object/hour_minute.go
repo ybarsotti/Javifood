@@ -6,7 +6,7 @@ import (
 )
 
 type HourMinute struct {
-	Hour   uint8 
+	Hour   uint8
 	Minute uint8
 }
 
@@ -16,7 +16,7 @@ func NewHourMinute(hour, minute uint8) (*HourMinute, error) {
 		return nil, domain.HourMinuteRangeError
 	}
 	return &HourMinute{
-		Hour: hour,
+		Hour:   hour,
 		Minute: minute,
 	}, nil
 }

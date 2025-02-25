@@ -13,7 +13,16 @@ import (
 var DBConn *gorm.DB
 
 func InitDatabase() error {
-	dbDsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s", config.EnvConfig.DB.Host, config.EnvConfig.DB.User, config.EnvConfig.DB.Password, config.EnvConfig.DB.DB, config.EnvConfig.DB.Port, config.EnvConfig.DB.SslMode, config.EnvConfig.DB.TimeZone)
+	dbDsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
+		config.EnvConfig.DB.Host,
+		config.EnvConfig.DB.User,
+		config.EnvConfig.DB.Password,
+		config.EnvConfig.DB.DB,
+		config.EnvConfig.DB.Port,
+		config.EnvConfig.DB.SslMode,
+		config.EnvConfig.DB.TimeZone,
+	)
 	db, err := gorm.Open(postgres.Open(dbDsn), &gorm.Config{})
 	if err != nil {
 		return err

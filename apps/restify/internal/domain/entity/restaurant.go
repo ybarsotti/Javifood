@@ -2,10 +2,11 @@ package entity
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"javifood-restify/internal/domain"
 	valueobject "javifood-restify/internal/domain/value_object"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Restaurant struct {
@@ -17,11 +18,17 @@ type Restaurant struct {
 	OpenTime   *valueobject.HourMinute `faker:"hourminute"`
 	CloseTime  *valueobject.HourMinute `faker:"hourminute"`
 	WorkDays   *valueobject.WorkDays   `faker:""`
-	CreatedAt  time.Time              `faker:"date"`
-	UpdatedAt  time.Time              `faker:"date"`
+	CreatedAt  *time.Time              `faker:"date"`
+	UpdatedAt  *time.Time              `faker:"date"`
 }
 
-func NewRestaurant(id, userId, name, address string, coordX, coordY float64, openTimeHour, openTimeMinute, closeTimeHour, closeTimeMinute uint8, workdays []string, createdAt, updatedAt *time.Time) (*Restaurant, error) {
+func NewRestaurant(
+	id, userId, name, address string,
+	coordX, coordY float64,
+	openTimeHour, openTimeMinute, closeTimeHour, closeTimeMinute uint8,
+	workdays []string,
+	createdAt, updatedAt *time.Time,
+) (*Restaurant, error) {
 	coordinate, err := valueobject.NewCoordinate(coordX, coordY)
 	if err != nil {
 		return nil, err
@@ -55,11 +62,8 @@ func NewRestaurant(id, userId, name, address string, coordX, coordY float64, ope
 		OpenTime:   openTime,
 		CloseTime:  closeTime,
 		WorkDays:   workDays,
-		CreatedAt:  *createdAt,
-		UpdatedAt:  *updatedAt,
-	}
-	if restaurant.CreatedAt.IsZero() {
-		restaurant.CreatedAt = time.Now()
+		CreatedAt:  createdAt,
+		UpdatedAt:  updatedAt,
 	}
 	if err = restaurant.Validate(); err != nil {
 		return nil, fmt.Errorf("error while validating restaurant: %v", err)

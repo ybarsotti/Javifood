@@ -10,13 +10,13 @@ import (
 )
 
 type RestaurantRepository struct {
-	db *gorm.DB
+	db               *gorm.DB
 	restaurantMapper mapper.RestaurantMapper
 }
 
 func NewRestaurantRepository() *RestaurantRepository {
 	return &RestaurantRepository{
-		db: database.DBConn,
+		db:               database.DBConn,
 		restaurantMapper: mapper.RestaurantMapper{},
 	}
 }
@@ -30,6 +30,9 @@ func (rp *RestaurantRepository) Store(ctx context.Context, restaurant *entity.Re
 	return tx.Error
 }
 
-func (rp *RestaurantRepository) FindByUserID(ctx context.Context, userID string) (*entity.Restaurant, error) {
+func (rp *RestaurantRepository) FindByUserID(
+	ctx context.Context,
+	userID string,
+) (*entity.Restaurant, error) {
 	return nil, nil
 }
