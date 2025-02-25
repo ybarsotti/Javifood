@@ -18,22 +18,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/restaurants": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "tags": [
-                    "restaurant"
-                ],
-                "summary": "Create a restaurant",
-                "responses": {
-                    "201": {
-                        "description": "Created"
-                    }
-                }
-            }
-        },
         "/api/v1/restaurants/": {
             "post": {
                 "description": "Allows to create a restaurant to the user",

@@ -10,7 +10,7 @@ import (
 	"go.opentelemetry.io/otel"
 )
 
-var t = otel.Tracer("create_restaurant")
+var t = otel.Tracer("restaurant")
 
 type (
 	CreateRestaurantHandler struct {
@@ -43,7 +43,7 @@ type (
 // @Router       /api/v1/restaurants/ [post]
 // @Param		 data body payloadDto true "Restaurant data"
 func (h *CreateRestaurantHandler) Handle(c *fiber.Ctx) error {
-	_, span := t.Start(c.Context(), "post")
+	_, span := t.Start(c.Context(), "create_restaurant")
 	defer span.End()
 	validate := validator.New()
 	payload := &payloadDto{}

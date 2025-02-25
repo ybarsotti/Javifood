@@ -100,6 +100,7 @@ func run() (err error) {
 	case <-ctx.Done():
 		stop()
 	}
-	app.Shutdown()
+	err = app.Shutdown()
+	log.Error(err)
 	return
 }

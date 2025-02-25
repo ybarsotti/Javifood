@@ -5,12 +5,9 @@ import (
 	"javifood-restify/internal/interactor"
 
 	fiber "github.com/gofiber/fiber/v2"
-	"go.opentelemetry.io/otel"
 )
 
-var tracer = otel.Tracer("restaurant")
-
-func NewRestaurantV1Handler(r fiber.Router) error {
+func NewRestaurantV1Handler(r fiber.Router) {
 	restaurantRepository := gateway.NewRestaurantRepository()
 
 	r.Post("", func(c *fiber.Ctx) error {
@@ -19,5 +16,4 @@ func NewRestaurantV1Handler(r fiber.Router) error {
 		)
 		return h.Handle(c)
 	})
-	return nil
 }

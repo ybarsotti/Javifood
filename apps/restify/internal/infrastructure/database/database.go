@@ -28,7 +28,8 @@ func InitDatabase() error {
 		return err
 	}
 	log.Info("connected to database")
-	db.AutoMigrate(&model.Restaurant{})
+	err = db.AutoMigrate(&model.Restaurant{})
+	log.Error("error in migration. ", err)
 	DBConn = db
 	return nil
 }

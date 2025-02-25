@@ -47,5 +47,8 @@ func (uc *CreateRestaurantInteractor) Execute(
 		nil,
 		nil,
 	)
+	if err != nil {
+		return err
+	}
 	return uc.restaurantRepository.Store(ctx, restaurant)
 }
