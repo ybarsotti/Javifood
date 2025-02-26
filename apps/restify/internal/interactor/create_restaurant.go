@@ -7,6 +7,8 @@ import (
 	"javifood-restify/internal/domain/entity"
 	"javifood-restify/internal/domain/repository"
 	usecase "javifood-restify/internal/domain/usecase"
+
+	"github.com/google/uuid"
 )
 
 type CreateRestaurantInteractor struct {
@@ -25,7 +27,11 @@ func (uc *CreateRestaurantInteractor) Execute(
 	ctx context.Context,
 	input usecase.CreateRestaurantUseCaseInputDto,
 ) error {
-	dbRestaurant, err := uc.restaurantRepository.FindByUserID(ctx, input.UserID)
+	userUUID, err := uuid.Parse(input.UserID)
+	if err != nil {
+		return err
+	}
+	dbRestaurant, err := uc.restaurantRepository.FindByUserID(ctx, userUUID)
 	if dbRestaurant != nil {
 		return domain.UserAlreadyHaveRestaurantError
 	}

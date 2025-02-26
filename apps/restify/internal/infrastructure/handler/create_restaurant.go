@@ -35,13 +35,13 @@ type (
 
 // CreateRestaurant godoc
 //
-// @Summary      Create a restaurant
-// @Description  Allows to create a restaurant to the user
-// @Tags         restaurants
-// @Accept       json
-// @Success      201
-// @Router       /api/v1/restaurants/ [post]
-// @Param		 data body payloadDto true "Restaurant data"
+//	@Summary		Create a restaurant
+//	@Description	Allows to create a restaurant to the user
+//	@Tags			restaurants
+//	@Accept			json
+//	@Success		201
+//	@Router			/api/v1/restaurants/ [post]
+//	@Param			data	body	payloadDto	true	"Restaurant data"
 func (h *CreateRestaurantHandler) Handle(c *fiber.Ctx) error {
 	_, span := t.Start(c.Context(), "create_restaurant")
 	defer span.End()

@@ -84,16 +84,6 @@ func run() (err error) {
 
 	handler.NewRestaurantV1Handler(restaurantsV1)
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		_, span := tracer.Start(c.Context(), "hello")
-		defer span.End()
-		log.WithFields(log.Fields{
-			"name":  "Hello Route",
-			"route": "/",
-		}).Info("Request received")
-		return c.SendString("Hello, Fiber!")
-	})
-
 	select {
 	case err = <-srvErr:
 		return
