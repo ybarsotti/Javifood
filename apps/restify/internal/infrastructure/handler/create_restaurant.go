@@ -1,12 +1,10 @@
 package handler
 
 import (
-	"fmt"
 	"javifood-restify/internal/domain/usecase"
-	"strings"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	log "github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel"
 )
 
@@ -26,11 +24,6 @@ type (
 		CloseTime   string   `json:"close_time"   example:"22:30"                                validate:"required"`
 		WorkDays    []string `json:"work_days"    example:"['Monday', 'Tuesday']"                validate:"required" enums:"Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"`
 	}
-	ErrorResponse struct {
-		FailedField string
-		Tag         string
-		Value       interface{}
-	}
 )
 
 // CreateRestaurant godoc
@@ -45,33 +38,14 @@ type (
 func (h *CreateRestaurantHandler) Handle(c *fiber.Ctx) error {
 	_, span := t.Start(c.Context(), "create_restaurant")
 	defer span.End()
-	validate := validator.New()
 	payload := &payloadDto{}
 	if err := c.BodyParser(&payload); err != nil {
+		log.Error(err.Error())
 		return err
 	}
-	errs := validate.Struct(payload)
-	if errs != nil {
-		errMsgs := make([]string, len(errs.(validator.ValidationErrors)))
-		for _, err := range errs.(validator.ValidationErrors) {
-			var elem ErrorResponse
-			elem.FailedField = err.Field()
-			elem.Tag = err.Tag()
-			elem.Value = err.Value()
-			errMsgs = append(
-				errMsgs,
-				fmt.Sprintf(
-					"[%s]: '%v' | Needs to implement '%s'",
-					elem.FailedField,
-					elem.Value,
-					elem.Tag,
-				),
-			)
-		}
-		return &fiber.Error{
-			Code:    fiber.ErrBadRequest.Code,
-			Message: strings.Join(errMsgs, ""),
-		}
+	validatedData := NewHandlerValidator().Validate(payload)
+	if err := validatedData.HasError(); err {
+		return validatedData.ToFiber()
 	}
 	// h.usecase.Execute(c.Context(), *usecase.NewCreateRestaurantInputDto(
 	// 	payload.UserID, payload.Name, payload.Address, strconv.Atoi(strings.Join([]string{

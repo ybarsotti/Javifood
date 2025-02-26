@@ -13,8 +13,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func newUseCase(
-) *interactor.CreateRestaurantInteractor {
+func newUseCase() *interactor.CreateRestaurantInteractor {
 	return interactor.NewCreateRestaurantInteractor(
 		gatewaymock.NewRestaurantInMemoryRepository(),
 	)
@@ -56,10 +55,9 @@ func TestCreateRestaurant_ConflictError(t *testing.T) {
 		00,
 		[]string{"Monday"},
 	)
+	_ = createRestaurant.Execute(ctx, *input)
 	err := createRestaurant.Execute(ctx, *input)
-	err = createRestaurant.Execute(ctx, *input)
 	if !errors.Is(err, domain.UserAlreadyHaveRestaurantError) {
 		t.Errorf("should raise UserAlreadyHaveRestaurantError")
 	}
 }
-

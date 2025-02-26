@@ -12,7 +12,7 @@ type HourMinute struct {
 
 // Time format is 24h
 func NewHourMinute(hour, minute uint8) (*HourMinute, error) {
-	if hour > 24 ||  minute > 60 {
+	if hour > 24 || minute > 60 {
 		return nil, domain.HourMinuteRangeError
 	}
 	return &HourMinute{

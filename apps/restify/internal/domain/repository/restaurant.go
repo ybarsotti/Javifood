@@ -2,8 +2,9 @@ package repository
 
 import (
 	"context"
-	"github.com/google/uuid"
 	entity "javifood-restify/internal/domain/entity"
+
+	"github.com/google/uuid"
 )
 
 type RestaurantRepository interface {

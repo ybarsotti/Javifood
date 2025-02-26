@@ -6,6 +6,7 @@ import (
 	"javifood-restify/internal/infrastructure/database"
 	"javifood-restify/internal/infrastructure/database/mapper"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -32,7 +33,7 @@ func (rp *RestaurantRepository) Store(ctx context.Context, restaurant *entity.Re
 
 func (rp *RestaurantRepository) FindByUserID(
 	ctx context.Context,
-	userID string,
+	userID uuid.UUID,
 ) (*entity.Restaurant, error) {
 	return nil, nil
 }

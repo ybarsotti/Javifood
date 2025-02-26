@@ -1,6 +1,7 @@
-include: 
- - ./docker-compose.infra.yml
- - ./apps/restify/docker-compose.yaml
+---
+include:
+  - ./docker-compose.infra.yml
+  - ./apps/restify/docker-compose.yaml
 
 networks:
   javifood-network:

@@ -6,8 +6,6 @@ import (
 	"os"
 	"os/signal"
 
-	"go.opentelemetry.io/otel"
-
 	"javifood-restify/config"
 	"javifood-restify/internal/infrastructure"
 	"javifood-restify/internal/infrastructure/database"
@@ -24,11 +22,14 @@ import (
 	"github.com/gofiber/swagger"
 )
 
-var tracer = otel.Tracer("restify")
-
 func init() {
 	log.SetFormatter(&log.JSONFormatter{})
 	config.NewEnv()
+}
+
+type GlobalErrorHandlerResp struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
 }
 
 // @title			JaviFood Restify
@@ -45,7 +46,14 @@ func main() {
 }
 
 func run() (err error) {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			return c.Status(fiber.StatusBadRequest).JSON(GlobalErrorHandlerResp{
+				Success: false,
+				Message: err.Error(),
+			})
+		},
+	})
 
 	app.Use(otelfiber.Middleware())
 	app.Use(cors.New())
@@ -68,11 +76,6 @@ func run() (err error) {
 
 	err = database.InitDatabase()
 
-	srvErr := make(chan error, 1)
-	go func() {
-		srvErr <- app.Listen(":3000")
-	}()
-
 	app.Get("/swagger/*", swagger.New(swagger.Config{
 		DeepLinking: true,
 		Title:       "Restify API Docs",
@@ -83,6 +86,11 @@ func run() (err error) {
 	restaurantsV1 := v1.Group("/restaurants")
 
 	handler.NewRestaurantV1Handler(restaurantsV1)
+
+	srvErr := make(chan error, 1)
+	go func() {
+		srvErr <- app.Listen(":3000")
+	}()
 
 	select {
 	case err = <-srvErr:

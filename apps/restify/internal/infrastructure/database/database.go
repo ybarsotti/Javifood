@@ -25,11 +25,14 @@ func InitDatabase() error {
 	)
 	db, err := gorm.Open(postgres.Open(dbDsn), &gorm.Config{})
 	if err != nil {
+		log.Error(err.Error())
 		return err
 	}
 	log.Info("connected to database")
 	err = db.AutoMigrate(&model.Restaurant{})
-	log.Error("error in migration. ", err)
+	if err != nil {
+		log.Error("error in migration. ", err.Error())
+	}
 	DBConn = db
 	return nil
 }
