@@ -23,9 +23,8 @@ type Restaurant struct {
 }
 
 func NewRestaurant(
-	id, userId, name, address string,
+	id, userId, name, address, openTime, closeTime string,
 	coordX, coordY float64,
-	openTimeHour, openTimeMinute, closeTimeHour, closeTimeMinute uint8,
 	workdays []string,
 	createdAt, updatedAt *time.Time,
 ) (*Restaurant, error) {
@@ -45,11 +44,11 @@ func NewRestaurant(
 	if err != nil {
 		return nil, err
 	}
-	openTime, err := valueobject.NewHourMinute(openTimeHour, openTimeMinute)
+	openTimeVO, err := valueobject.NewHourMinute(openTime)
 	if err != nil {
 		return nil, err
 	}
-	closeTime, err := valueobject.NewHourMinute(closeTimeHour, closeTimeMinute)
+	closeTimeVO, err := valueobject.NewHourMinute(closeTime)
 	if err != nil {
 		return nil, err
 	}
@@ -59,8 +58,8 @@ func NewRestaurant(
 		Name:       name,
 		Address:    address,
 		Coordinate: coordinate,
-		OpenTime:   openTime,
-		CloseTime:  closeTime,
+		OpenTime:   openTimeVO,
+		CloseTime:  closeTimeVO,
 		WorkDays:   workDays,
 		CreatedAt:  createdAt,
 		UpdatedAt:  updatedAt,
@@ -83,12 +82,6 @@ func (r *Restaurant) Validate() error {
 	}
 	if r.Coordinate == nil {
 		return domain.NewRequiredFieldMissingError("coordinate")
-	}
-	if r.OpenTime == nil {
-		return domain.NewRequiredFieldMissingError("opentime")
-	}
-	if r.CloseTime == nil {
-		return domain.NewRequiredFieldMissingError("closetime")
 	}
 	if len(r.WorkDays.Value) == 0 {
 		return domain.NewRequiredFieldMissingError("workdays")

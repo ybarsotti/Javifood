@@ -3,16 +3,18 @@ package valueobject
 import (
 	"fmt"
 	"javifood-restify/internal/domain"
+	"javifood-restify/pkg/utils"
 )
 
 type HourMinute struct {
-	Hour   uint8
-	Minute uint8
+	Hour   int
+	Minute int
 }
 
 // Time format is 24h
-func NewHourMinute(hour, minute uint8) (*HourMinute, error) {
-	if hour > 24 || minute > 60 {
+func NewHourMinute(t string) (*HourMinute, error) {
+	hour, minute := utils.SplitStringTimeIntoHourMinute(t)
+	if hour < 0 || hour > 24 || minute < 0 || minute > 60 {
 		return nil, domain.HourMinuteRangeError
 	}
 	return &HourMinute{

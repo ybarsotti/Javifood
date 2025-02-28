@@ -26,12 +26,10 @@ func TestCreateRestaurant_CreateSuccessfully(t *testing.T) {
 		uuid.NewString(),
 		"Restaurant 1",
 		"Address",
+		"10:00",
+		"21:30",
 		21.222,
 		-10.000,
-		10,
-		00,
-		20,
-		00,
 		[]string{"Monday"},
 	)
 	err := createRestaurant.Execute(ctx, *input)
@@ -47,12 +45,10 @@ func TestCreateRestaurant_ConflictError(t *testing.T) {
 		uuid.NewString(),
 		"Restaurant 1",
 		"Address",
+		"10:00",
+		"21:30",
 		21.222,
 		-10.000,
-		10,
-		00,
-		20,
-		00,
 		[]string{"Monday"},
 	)
 	_ = createRestaurant.Execute(ctx, *input)

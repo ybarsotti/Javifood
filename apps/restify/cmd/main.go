@@ -33,8 +33,8 @@ type GlobalErrorHandlerResp struct {
 }
 
 // @title			JaviFood Restify
-// @version		1.0
-// @description	Restify API docs
+// @version			1.0
+// @description		Restify API docs
 // @contact.name	Yuri Barsotti
 // @contact.email	contact@yuribarsotti.tech
 // @host			localhost:3000
@@ -48,7 +48,7 @@ func main() {
 func run() (err error) {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return c.Status(fiber.StatusBadRequest).JSON(GlobalErrorHandlerResp{
+			return c.Status(fiber.StatusInternalServerError).JSON(GlobalErrorHandlerResp{
 				Success: false,
 				Message: err.Error(),
 			})

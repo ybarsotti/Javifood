@@ -47,11 +47,13 @@ func (h *CreateRestaurantHandler) Handle(c *fiber.Ctx) error {
 	if err := validatedData.HasError(); err {
 		return validatedData.ToFiber()
 	}
-	// h.usecase.Execute(c.Context(), *usecase.NewCreateRestaurantInputDto(
-	// 	payload.UserID, payload.Name, payload.Address, strconv.Atoi(strings.Join([]string{
-	// 		payload.CoordinateX
-	// 	}))
-	// 	))
+	err := h.usecase.Execute(c.Context(), *usecase.NewCreateRestaurantInputDto(
+		payload.UserID, payload.Name, payload.Address, payload.OpenTime, payload.CloseTime, payload.CoordinateX, payload.CoordinateY, payload.WorkDays,
+	))
+	if err != nil {
+		// TODO: Add specific error handling
+		return fiber.NewError(fiber.StatusBadGateway, err.Error())
+	}
 	return c.SendStatus(201)
 }
 

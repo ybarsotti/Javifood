@@ -2,7 +2,6 @@ package interactor
 
 import (
 	"context"
-	"errors"
 	"javifood-restify/internal/domain"
 	"javifood-restify/internal/domain/entity"
 	"javifood-restify/internal/domain/repository"
@@ -31,24 +30,19 @@ func (uc *CreateRestaurantInteractor) Execute(
 	if err != nil {
 		return err
 	}
-	dbRestaurant, err := uc.restaurantRepository.FindByUserID(ctx, userUUID)
+	dbRestaurant, _ := uc.restaurantRepository.FindByUserID(ctx, userUUID)
 	if dbRestaurant != nil {
 		return domain.UserAlreadyHaveRestaurantError
-	}
-	if err != nil {
-		return errors.Join(domain.InternalServerError, err)
 	}
 	restaurant, err := entity.NewRestaurant(
 		"",
 		input.UserID,
 		input.Name,
 		input.Address,
+		input.OpenTime,
+		input.CloseTime,
 		input.CoordinateX,
 		input.CoordinateY,
-		input.OpenTimeHour,
-		input.OpenTimeMinute,
-		input.CloseTimeHour,
-		input.CloseTimeMinute,
 		input.WorkDays,
 		nil,
 		nil,

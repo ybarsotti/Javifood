@@ -17,12 +17,10 @@ func (rm RestaurantMapper) ToDomain(r model.Restaurant) (*entity.Restaurant, err
 		r.UserID.String(),
 		r.Name,
 		r.Address,
+		r.OpenTime,
+		r.CloseTime,
 		r.CoordinateX,
 		r.CoordinateY,
-		r.OpenTimeHour(),
-		r.OpenTimeMinute(),
-		r.CloseTimeHour(),
-		r.CloseTimeMinute(),
 		workDays,
 		r.CreatedAt,
 		r.UpdatedAt,
@@ -30,6 +28,18 @@ func (rm RestaurantMapper) ToDomain(r model.Restaurant) (*entity.Restaurant, err
 	return domainRestaurant, err
 }
 
-func (rm RestaurantMapper) ToDatabase(r entity.Restaurant) (*model.Restaurant, error) {
-	return nil, nil
+func (rm RestaurantMapper) ToDatabase(r entity.Restaurant) *model.Restaurant {
+	return &model.Restaurant{
+		ID:          r.ID.Value,
+		UserID:      r.UserID.Value,
+		Name:        r.Name,
+		Address:     r.Address,
+		CoordinateX: r.Coordinate.X,
+		CoordinateY: r.Coordinate.Y,
+		OpenTime:    r.OpenTime.String(),
+		CloseTime:   r.CloseTime.String(),
+		WorkDays:    r.WorkDays.Value,
+		CreatedAt:   r.CreatedAt,
+		UpdatedAt:   r.UpdatedAt,
+	}
 }

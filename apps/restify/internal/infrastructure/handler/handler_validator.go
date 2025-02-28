@@ -32,7 +32,7 @@ func (h *HandlerValidator) Validate(data any) *HandlerValidator {
 	errs := validate.Struct(data)
 
 	if errs == nil {
-		return nil
+		return h
 	}
 
 	for _, err := range errs.(validator.ValidationErrors) {

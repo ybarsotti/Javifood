@@ -2,9 +2,11 @@ package gateway
 
 import (
 	"context"
+	"errors"
 	"javifood-restify/internal/domain/entity"
 	"javifood-restify/internal/infrastructure/database"
 	"javifood-restify/internal/infrastructure/database/mapper"
+	"javifood-restify/internal/infrastructure/database/model"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -23,10 +25,7 @@ func NewRestaurantRepository() *RestaurantRepository {
 }
 
 func (rp *RestaurantRepository) Store(ctx context.Context, restaurant *entity.Restaurant) error {
-	restaurantDB, err := rp.restaurantMapper.ToDatabase(*restaurant)
-	if err != nil {
-		return err
-	}
+	restaurantDB := rp.restaurantMapper.ToDatabase(*restaurant)
 	tx := rp.db.Create(&restaurantDB)
 	return tx.Error
 }
@@ -35,5 +34,14 @@ func (rp *RestaurantRepository) FindByUserID(
 	ctx context.Context,
 	userID uuid.UUID,
 ) (*entity.Restaurant, error) {
-	return nil, nil
+	dbRestaurant := model.Restaurant{}
+	rp.db.Where("user_id = ?", userID.String()).First(&dbRestaurant)
+	if dbRestaurant.ID == uuid.Nil {
+		return nil, nil
+	}
+	restaurant, err := rp.restaurantMapper.ToDomain(dbRestaurant)
+	if err != nil {
+		return nil, errors.New("failed to hydrate restaurant")
+	}
+	return restaurant, nil
 }

@@ -14,10 +14,8 @@ func TestRestaurant_NewRestaurantIsValid(t *testing.T) {
 	address := "Address 1"
 	coordinateX := -65.87425
 	coordinateY := 25.23404
-	openHour := uint8(8)
-	openMinute := uint8(00)
-	closeHour := uint8(21)
-	closeMinute := uint8(00)
+	openTime := "08:00"
+	closeTime := "21:30"
 	workDays := []string{"Monday", "Tuesday"}
 	now := time.Now()
 	restaurant, err := entity.NewRestaurant(
@@ -25,12 +23,10 @@ func TestRestaurant_NewRestaurantIsValid(t *testing.T) {
 		userID,
 		name,
 		address,
+		openTime,
+		closeTime,
 		coordinateX,
 		coordinateY,
-		openHour,
-		openMinute,
-		closeHour,
-		closeMinute,
 		workDays,
 		&now,
 		&now,
@@ -59,7 +55,7 @@ func TestRestaurant_NewRestaurantIsValid(t *testing.T) {
 	if restaurant.OpenTime.String() != "08:00" {
 		t.Errorf("opentime does not match")
 	}
-	if restaurant.CloseTime.String() != "21:00" {
+	if restaurant.CloseTime.String() != "21:30" {
 		t.Errorf("closetime does not match")
 	}
 	if !slices.Equal(restaurant.WorkDays.Value, workDays) {
