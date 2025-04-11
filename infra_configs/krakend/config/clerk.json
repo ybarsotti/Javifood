@@ -1,0 +1,17 @@
+{
+  "extra_config": {
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "https://ultimate-bee-91.clerk.accounts.dev/.well-known/jwks.json",
+      "cache": true,
+      "cache_duration": 30,
+      "propagate_claims": [
+        {
+          "claim": "sub",
+          "header_name": "X-User-ID"
+        }
+      ]
+    }
+  },
+  "input_headers": ["Authorization"]
+}

@@ -45,7 +45,6 @@ definitions:
     - coordinate_y
     - name
     - open_time
-    - user_id
     - work_days
     type: object
 host: localhost:3000
@@ -63,6 +62,11 @@ paths:
       - application/json
       description: Allows to create a restaurant to the user
       parameters:
+      - description: User ID from Clerk JWT
+        in: header
+        name: x-user
+        required: true
+        type: string
       - description: Restaurant data
         in: body
         name: data

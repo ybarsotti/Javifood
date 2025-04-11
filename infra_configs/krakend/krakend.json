@@ -1,0 +1,154 @@
+{
+  "$schema": "https://www.krakend.io/schema/v2.9/krakend.json",
+  "version": 3,
+  "name": "krakend",
+  "port": 8080,
+  "extra_config": {
+    "security/cors": {
+      "allow_origins": ["*"],
+      "expose_headers": ["Content-Length"],
+      "max_age": "12h",
+      "allow_methods": ["GET", "HEAD", "POST", "PUT", "DELETE"],
+      "allow_credentials": true
+    },
+    "telemetry/logging": {
+      "level": "DEBUG",
+      "prefix": "[KRAKEND]",
+      "syslog": true,
+      "stdout": true,
+      "format": "logstash",
+      "syslog_facility": "local3"
+    },
+    "telemetry/logstash": {
+      "enabled": true
+    },
+    "telemetry/metrics": {
+      "collection_time": "60s",
+      "proxy_disabled": false,
+      "router_disabled": false,
+      "backend_disabled": false,
+      "endpoint_disabled": false,
+      "listen_address": ":8090"
+    },
+    "telemetry/opentelemetry": {
+      "trace_sample_rate": 0.25,
+      "metric_reporting_period": 1,
+      "exporters": {
+        "otlp": [
+          {
+            "name": "otlp_exporter",
+            "host": "otel-collector",
+            "port": 4317,
+            "use_http": false,
+            "disable_metrics": false,
+            "disable_traces": false
+          }
+        ],
+        "prometheus": [
+          {
+            "name": "prometheus_exporter",
+            "port": 9090
+          }
+        ]
+      },
+      "layers": {
+        "global": {
+          "disable_metrics": false,
+          "disable_traces": false,
+          "disable_propagation": false
+        },
+        "proxy": {
+          "disable_metrics": false,
+          "disable_traces": false
+        },
+        "backend": {
+          "metrics": {
+            "disable_stage": false,
+            "round_trip": false,
+            "read_payload": false,
+            "detailed_connection": false,
+            "static_attributes": []
+          },
+          "traces": {
+            "disable_stage": false,
+            "round_trip": false,
+            "read_payload": false,
+            "detailed_connection": false,
+            "static_attributes": []
+          }
+        }
+      }
+    },
+    "documentation/openapi": {
+      "version": "1.0",
+      "host": "localhost",
+      "base_path": ""
+    },
+    "router": {
+      "disable_gzip": false
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/api/profile",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "https://ultimate-bee-91.clerk.accounts.dev/.well-known/jwks.json",
+          "cache": true,
+          "cache_duration": 30,
+          "propagate_claims": [["sub", "x-user-id"]]
+        }
+      },
+      "backend": [
+        {
+          "host": ["http://whoami:80"],
+          "url_pattern": "/",
+          "input_headers": ["Authorization", "x-user-id"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/restaurants",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["x-user", "Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/api/v1/restaurants",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "host": ["http://restify:3000", "restify:3000"],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "https://ultimate-bee-91.clerk.accounts.dev/.well-known/jwks.json",
+          "cache": true,
+          "cache_duration": 30,
+          "operation_debug": true,
+          "disable_jwk_security": true,
+          "propagate_claims": [["sub", "x-user"]]
+        },
+        "documentation/openapi": {
+          "version": "1.0",
+          "summary": "Create restaurant",
+          "tags": ["Restaurants"]
+        }
+      },
+      "cache_ttl": "1m",
+      "timeout": "10s"
+    }
+  ],
+  "debug_endpoint": true,
+  "echo_endpoint": true,
+  "cache_ttl": "60m",
+  "timeout": "10s",
+  "output_encoding": "json"
+}
+

@@ -14,7 +14,7 @@ func (rm RestaurantMapper) ToDomain(r model.Restaurant) (*entity.Restaurant, err
 	}
 	domainRestaurant, err := entity.NewRestaurant(
 		r.ID.String(),
-		r.UserID.String(),
+		r.UserID,
 		r.Name,
 		r.Address,
 		r.OpenTime,
@@ -31,7 +31,7 @@ func (rm RestaurantMapper) ToDomain(r model.Restaurant) (*entity.Restaurant, err
 func (rm RestaurantMapper) ToDatabase(r entity.Restaurant) *model.Restaurant {
 	return &model.Restaurant{
 		ID:          r.ID.Value,
-		UserID:      r.UserID.Value,
+		UserID:      r.UserID,
 		Name:        r.Name,
 		Address:     r.Address,
 		CoordinateX: r.Coordinate.X,

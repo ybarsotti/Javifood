@@ -32,10 +32,10 @@ func (rp *RestaurantRepository) Store(ctx context.Context, restaurant *entity.Re
 
 func (rp *RestaurantRepository) FindByUserID(
 	ctx context.Context,
-	userID uuid.UUID,
+	userID string,
 ) (*entity.Restaurant, error) {
 	dbRestaurant := model.Restaurant{}
-	rp.db.Where("user_id = ?", userID.String()).First(&dbRestaurant)
+	rp.db.Where("user_id = ?", userID).First(&dbRestaurant)
 	if dbRestaurant.ID == uuid.Nil {
 		return nil, nil
 	}

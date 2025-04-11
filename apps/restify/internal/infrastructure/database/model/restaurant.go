@@ -9,7 +9,7 @@ import (
 
 type Restaurant struct {
 	ID          uuid.UUID `gorm:"primaryKey;type:uuid"`
-	UserID      uuid.UUID `gorm:"index"`
+	UserID      string    `gorm:"index"`
 	Name        string
 	Address     string
 	CoordinateX float64

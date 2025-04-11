@@ -1,16 +1,15 @@
 ---
 services:
-  app:
+  restify:
     container_name: restify
     build:
       context: .
       dockerfile: Dockerfile
     working_dir: /app
     tty: true
+    stdin_open: true
     volumes:
       - ./:/app
-    ports:
-      - "3000:3000"
     depends_on:
       - db
     networks:

@@ -10,6 +10,7 @@ import (
 	"javifood-restify/internal/infrastructure"
 	"javifood-restify/internal/infrastructure/database"
 	"javifood-restify/internal/infrastructure/handler"
+	"javifood-restify/internal/infrastructure/middleware"
 
 	"github.com/gofiber/contrib/otelfiber"
 	"github.com/gofiber/fiber/v2"
@@ -56,6 +57,7 @@ func run() (err error) {
 	})
 
 	app.Use(otelfiber.Middleware())
+	app.Use(middleware.RequireXUserHeader)
 	app.Use(cors.New())
 	app.Use(recover.New())
 

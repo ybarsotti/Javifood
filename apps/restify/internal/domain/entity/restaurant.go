@@ -5,13 +5,11 @@ import (
 	"javifood-restify/internal/domain"
 	valueobject "javifood-restify/internal/domain/value_object"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Restaurant struct {
 	ID         *valueobject.ID         `faker:"uuid_digit"`
-	UserID     *valueobject.ID         `faker:"uuid_digit"`
+	UserID     string                  `faker:"uuid_digit"`
 	Name       string                  `faker:"name"`
 	Address    string                  `faker:"real_address"`
 	Coordinate *valueobject.Coordinate `faker:"coordinate"`
@@ -40,10 +38,6 @@ func NewRestaurant(
 	if err != nil {
 		return nil, err
 	}
-	uid, err := valueobject.NewID(userId)
-	if err != nil {
-		return nil, err
-	}
 	openTimeVO, err := valueobject.NewHourMinute(openTime)
 	if err != nil {
 		return nil, err
@@ -54,7 +48,7 @@ func NewRestaurant(
 	}
 	restaurant := &Restaurant{
 		ID:         rid,
-		UserID:     uid,
+		UserID:     userId,
 		Name:       name,
 		Address:    address,
 		Coordinate: coordinate,
@@ -71,7 +65,7 @@ func NewRestaurant(
 }
 
 func (r *Restaurant) Validate() error {
-	if r.UserID.Value == uuid.Nil {
+	if r.UserID == "" {
 		return domain.NewRequiredFieldMissingError("userID")
 	}
 	if r.Name == "" {

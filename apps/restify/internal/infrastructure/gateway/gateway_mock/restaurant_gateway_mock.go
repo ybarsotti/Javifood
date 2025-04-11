@@ -3,8 +3,6 @@ package gatewaymock
 import (
 	"context"
 	"javifood-restify/internal/domain/entity"
-
-	"github.com/google/uuid"
 )
 
 type RestaurantInMemoryRepository struct {
@@ -25,10 +23,10 @@ func (r *RestaurantInMemoryRepository) Store(
 
 func (r *RestaurantInMemoryRepository) FindByUserID(
 	ctx context.Context,
-	userID uuid.UUID,
+	userID string,
 ) (*entity.Restaurant, error) {
 	for _, restaurant := range r.restaurants {
-		if restaurant.UserID.Value == userID {
+		if restaurant.UserID == userID {
 			return &restaurant, nil
 		}
 	}

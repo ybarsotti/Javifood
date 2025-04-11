@@ -1,5 +1,5 @@
-import subprocess
 import webbrowser
+import time
 
 from invoke import task
 
@@ -20,21 +20,21 @@ def _format_url(service: str) -> str:
 
 @task
 def run_servers(ctx, open_browser=True):
-    result = subprocess.run(
-        ["docker", "compose", "-f", "docker-compose.main.yml", "up", "-d"]
-    )
-    result.check_returncode()
+    print("Starting servers...")
+    ctx.run("docker compose -f docker-compose.main.yml up",
+            pty=True, asynchronous=True)
+    time.sleep(5)
+
     if open_browser:
-        print("Opening broser with all services...")
+        print("Opening browser with all services...")
         webbrowser.open(_format_url(SERVICES[0]), new=1)
         for service in SERVICES[1:]:
             webbrowser.open_new_tab(_format_url(service))
 
+            ctx.run("docker compose -f docker-compose.main.yml logs -f", pty=True)
+
 
 @task
 def stop(ctx):
-    result = subprocess.run(
-        ["docker", "compose", "-f", "docker-compose.main.yml", "up", "-d"]
-    )
-    result.check_returncode()
+    ctx.run("docker compose -f docker-compose.main.yml stop")
     print("Services stopped")

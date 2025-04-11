@@ -37,7 +37,7 @@ func TestRestaurant_NewRestaurantIsValid(t *testing.T) {
 	if restaurant.ID.Value.String() != restaurantID {
 		t.Errorf("restaurant id should not be empty")
 	}
-	if restaurant.UserID.Value.String() != userID {
+	if restaurant.UserID != userID {
 		t.Errorf("user id should not be empty")
 	}
 	if restaurant.Name != name {

@@ -1,43 +1,45 @@
 # TODO: add Kong and minio, prometheus
 ---
 services:
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.0
-    command:
-      [
-        "start-dev",
-        "--http-port",
-        "7080",
-        "--https-port",
-        "7443",
-        "--import-realm",
-      ]
-    environment:
-      KC_HOSTNAME: localhost
-      KC_HOSTNAME_PORT: 7080
-      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_HEALTH_ENABLED: "true"
-      KC_LOG_LEVEL: info
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:7080/health/ready"]
-      interval: 15s
-      timeout: 2s
-      retries: 15
-    networks:
-      - javifood-network
-    ports:
-      - "7080:7080"
-      - "7443:7443"
+  # keycloak:
+  #   image: quay.io/keycloak/keycloak:26.0
+  #   container_name: javifood-keycloak
+  #   command:
+  #     [
+  #       "start-dev",
+  #       "--http-port",
+  #       "7080",
+  #       "--https-port",
+  #       "7443",
+  #       "--import-realm",
+  #     ]
+  #   environment:
+  #     KC_HOSTNAME: localhost
+  #     KC_HOSTNAME_PORT: 7080
+  #     KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
+  #     KEYCLOAK_ADMIN: admin
+  #     KEYCLOAK_ADMIN_PASSWORD: admin
+  #     KC_HEALTH_ENABLED: "true"
+  #     KC_LOG_LEVEL: info
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:7080/health/ready"]
+  #     interval: 15s
+  #     timeout: 2s
+  #     retries: 15
+  #   networks:
+  #     - javifood-network
+  #   ports:
+  #     - "7080:7080"
+  #     - "7443:7443"
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.119.0
+    container_name: javifood-otel-collector
     command: ["--config=/etc/otel-collector.yaml"]
     ports:
-      - "4317:4317"   # gRPC
+      - "4317:4317" # gRPC
     volumes:
-      - ./otel-collector-config.yaml:/etc/otel-collector.yaml
+      - ./infra_configs/otel-collector-config.yaml:/etc/otel-collector.yaml
     depends_on:
       - zipkin
       - prometheus
@@ -46,8 +48,9 @@ services:
 
   prometheus:
     image: prom/prometheus:v3.1.0
+    container_name: javifood-prometheus
     volumes:
-      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+      - ./infra_configs/prometheus.yaml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
     networks:
@@ -55,7 +58,7 @@ services:
 
   zipkin:
     image: openzipkin/zipkin
-    container_name: zipkin
+    container_name: javifood-zipkin
     ports:
       - "9411:9411"
     networks:
@@ -65,7 +68,7 @@ services:
 
   sonarqube:
     image: sonarqube:lts
-    container_name: sonarqube
+    container_name: javifood-sonarqube
     restart: always
     ports:
       - "9000:9000"
@@ -80,7 +83,7 @@ services:
 
   sonar-db:
     image: postgres:15
-    container_name: sonar-db
+    container_name: javifood-sonar-db
     restart: always
     environment:
       POSTGRES_USER: sonar
@@ -91,8 +94,18 @@ services:
     volumes:
       - sonar-db-data:/var/lib/postgresql/data
 
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI
+    networks:
+      - javifood-network
+
   redis:
     image: redis:latest
+    container_name: javifood-redis
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       interval: 1s
@@ -102,8 +115,28 @@ services:
     networks:
       - javifood-network
 
+  krakend:
+    image: devopsfaith/krakend
+    container_name: javifood-krakend
+    volumes:
+      - ./infra_configs/krakend:/etc/krakend
+    ports:
+      - "8080:8080"
+    command: ["run", "-d", "-c", "/etc/krakend/krakend.json"]
+    networks:
+      - javifood-network
+
+  whoami:
+    image: traefik/whoami
+    ports:
+      - "8081:80"
+    networks:
+      - javifood-network
+
+
 volumes:
   sonar-db-data:
+  kratos-db-data:
 
 networks:
   javifood-network:

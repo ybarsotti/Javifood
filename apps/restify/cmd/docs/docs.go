@@ -30,6 +30,13 @@ const docTemplate = `{
                 "summary": "Create a restaurant",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "User ID from Clerk JWT",
+                        "name": "x-user",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Restaurant data",
                         "name": "data",
                         "in": "body",
@@ -57,7 +64,6 @@ const docTemplate = `{
                 "coordinate_y",
                 "name",
                 "open_time",
-                "user_id",
                 "work_days"
             ],
             "properties": {
